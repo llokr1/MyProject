@@ -1,3 +1,12 @@
+---
+name: ♻️ Refactor
+about: Suggest or document a refactor without functional changes
+title: "♻️[REFACTOR]"
+labels: ''
+assignees: ''
+
+---
+
 ## 📖 Background
 리팩토링이 필요한 이유를 작성해주세요.
 

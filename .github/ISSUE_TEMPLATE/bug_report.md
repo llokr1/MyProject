@@ -1,3 +1,10 @@
+---
+name: "🐞 Bug Report"
+about: 발견한 버그를 제보할 때 사용하세요
+title: "🐞[Bug] "
+labels: ["bug"]
+---
+
 ## 📖 Description
 발견한 문제를 간단하게 설명해주세요.
 
