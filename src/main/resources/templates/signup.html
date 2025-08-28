@@ -1,0 +1,46 @@
+<!-- src/main/resources/templates/signup.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 가입</title>
+</head>
+<body>
+<h1>회원 가입</h1>
+<form th:action="@{/signup}" th:object="${signupRequest}" method="post">
+    <label>아이디:
+        <input type="text" th:field="*{userName}" required>
+    </label><br>
+
+    <label>이메일:
+        <input type="email" th:field="*{email}" required>
+    </label><br>
+
+    <label>비밀번호:
+        <input type="password" th:field="*{password}" required>
+    </label><br>
+
+    <label>성별:
+        <select th:field="*{gender}">
+            <option th:value="MALE">남성</option>
+            <option th:value="FEMALE">여성</option>
+        </select>
+    </label><br>
+
+    <label>나이:
+        <input type="number" th:field="*{age}" required>
+    </label><br>
+
+    <label>주소:
+        <input type="text" th:field="*{address}" required>
+    </label><br>
+
+    <label>상세 주소:
+        <input type="text" th:field="*{specAddress}" required>
+    </label><br>
+
+    <button type="submit">회원 가입</button>
+</form>
+<p><a th:href="@{/login}">이미 계정이 있나요? 로그인하기</a></p>
+</body>
+</html>
