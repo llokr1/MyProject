@@ -1,19 +1,3 @@
----
-name: Feature request
-about: Suggest an idea for this project
-title: "[FEAT] "
-labels: ''
-assignees: ''
-
----
-
----
-name: "✨ Feature Request"
-about: 새로운 기능을 제안할 때 사용하세요
-title: "[Feature] "
-labels: ["feature"]
----
-
 ## 📖 Description
 원하는 기능에 대한 간단한 설명을 작성해주세요.
 

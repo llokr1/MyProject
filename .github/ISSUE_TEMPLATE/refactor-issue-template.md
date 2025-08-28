@@ -1,19 +1,3 @@
----
-name: Refactor issue template
-about: Suggest or document a refactor without functional changes
-title: "[REFACTOR]"
-labels: ''
-assignees: ''
-
----
-
----
-name: "♻️ Refactor"
-about: Suggest or document a refactor without functional changes
-title: "[Refactor] "
-labels: ["refactor"]
----
-
 ## 📖 Background
 리팩토링이 필요한 이유를 작성해주세요.
 

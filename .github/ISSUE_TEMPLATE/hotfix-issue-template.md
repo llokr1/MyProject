@@ -1,19 +1,3 @@
----
-name: Hotfix issue template
-about: Report an urgent issue that requires a hotfix
-title: "[HOTFIX]"
-labels: ''
-assignees: ''
-
----
-
----
-name: "🚑 Hotfix"
-about: 서비스에 치명적인 문제를 긴급 수정할 때 사용하세요
-title: "[Hotfix] "
-labels: ["hotfix"]
----
-
 ## 📖 Issue
 긴급 수정이 필요한 문제를 간단히 설명해주세요.
 
