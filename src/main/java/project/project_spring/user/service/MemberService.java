@@ -1,0 +1,35 @@
+package project.project_spring.user.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import project.project_spring.user.domain.Member;
+import project.project_spring.user.repository.MemberRepository;
+
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+
+    private final MemberRepository memberRepository;
+
+    public Member findMemberById(Long memberId){
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException());
+
+        return member;
+    }
+
+    public Member findMemberByEmail(String email){
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException());
+
+        return member;
+    }
+
+    public Member saveMember(Member member){
+
+        return memberRepository.save(member);
+
+    }
+}

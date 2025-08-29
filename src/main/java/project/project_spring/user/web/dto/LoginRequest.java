@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-class LoginRequest {
+public class LoginRequest {
 
     @Email
     @NotNull
