@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 public class SignupResponse {
 
     private String email;
-    private String userName;
+    private String memberName;
 
     @Builder
-    private SignupResponse(String email, String userName){
+    private SignupResponse(String email, String memberName){
         this.email = email;
-        this.userName = userName;
+        this.memberName = memberName;
     }
 
     public static SignupResponse of(String email, String memberName){
         return SignupResponse.builder()
                 .email(email)
-                .userName(memberName)
+                .memberName(memberName)
                 .build();
     }
 

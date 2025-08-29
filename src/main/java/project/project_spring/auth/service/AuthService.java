@@ -12,7 +12,7 @@ public interface AuthService {
 
     public SignupResponse signup(SignupRequest request);
 
-    public LoginResponse login(LoginRequest request);
+    public LoginResponse login(LoginRequest request, HttpServletResponse response);
 
     public TokenResponse reissueToken(HttpServletRequest request, HttpServletResponse response);
 }

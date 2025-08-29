@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,13 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.project_spring.auth.jwt.JwtTokenProvider;
-import project.project_spring.auth.refresh.entity.RefreshToken;
-import project.project_spring.auth.refresh.repository.RefreshTokenRepository;
 import project.project_spring.auth.web.dto.TokenResponse;
 import project.project_spring.common.exception.GeneralException;
 import project.project_spring.common.response.ErrorCode;
 import project.project_spring.user.domain.Member;
-import project.project_spring.user.repository.MemberRepository;
 import project.project_spring.user.service.MemberService;
 import project.project_spring.user.web.dto.LoginRequest;
 import project.project_spring.user.web.dto.LoginResponse;
@@ -39,7 +37,8 @@ public class JwtAuthServiceImpl implements AuthService{
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    @Value("${jwt.refresh.expiration}")
+    public Long refreshExpiration;
 
     @Override
     public SignupResponse signup(SignupRequest request) {
@@ -56,7 +55,7 @@ public class JwtAuthServiceImpl implements AuthService{
     }
 
     @Transactional
-    public LoginResponse login(LoginRequest request){
+    public LoginResponse login(LoginRequest request, HttpServletResponse response){
 
         // DB에서 사용자를 조회 (아이디 검증)
         Member member = memberService.findMemberByEmail(request.getEmail());
@@ -77,7 +76,18 @@ public class JwtAuthServiceImpl implements AuthService{
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
 
         // refreshToken 저장
-        refreshTokenService.saveRefreshToken(member, refreshToken);
+        refreshTokenService.saveOrUpdateRefreshToken(member, refreshToken);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(refreshExpiration / 1000)
+                .secure(true)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        log.info("사용자 로그인 : {}", member.getMemberName());
+        log.info("accessToken, refreshToken 발급 완료");
 
         // DTO 반환
         return LoginResponse.of(member.getId(), member.getMemberName(), accessToken, refreshToken);
@@ -97,19 +107,18 @@ public class JwtAuthServiceImpl implements AuthService{
                 .filter(cookie -> cookie.getName().equals("refreshToken"))
                 .findFirst()
                 .map(Cookie::getValue)
-                .toString();
+                .orElseThrow(() -> new GeneralException(ErrorCode.TOKEN_MISSING));
 
         // 가져온 Refresh Token 유효성 검사
-        if(jwtTokenProvider.validateRefreshToken(refreshToken)){
+        if(!jwtTokenProvider.validateRefreshToken(refreshToken)){
             throw new GeneralException(ErrorCode.INVALIDATE_TOKEN);
         };
 
         // 요청에서 가져온 RefreshToken으로 userId를 찾는다.
-        Long memberId = jwtTokenProvider.extractUserIdFromRefreshToken(refreshToken);
+        Long memberId = jwtTokenProvider.extractMemberIdFromRefreshToken(refreshToken);
 
         // userId를 통해 DB에서 기존에 저장된 user의 Refresh Token를 찾는다.
-        RefreshToken storedRefreshToken = refreshTokenRepository.findByUserId(memberId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.TOKEN_MISSING));
+        String storedRefreshToken = refreshTokenService.findRefreshTokenByMemberId(memberId).getToken();
 
         // 요청 받은 Refresh Token과 저장된 Refresh Token 비교
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)){
@@ -124,15 +133,17 @@ public class JwtAuthServiceImpl implements AuthService{
         // RTR(Refresh Token Rotation)
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(memberId);
 
-        refreshTokenService.saveRefreshToken(member, newRefreshToken);
+        refreshTokenService.saveOrUpdateRefreshToken(member, newRefreshToken);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
                 .httpOnly(true)
                 .path("/")
-                .maxAge(JwtTokenProvider.refreshExpiration / 1000)
+                .maxAge(refreshExpiration / 1000)
                 .secure(true)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        log.info("{} : 토큰 재발급 완료", member.getMemberName());
 
         return TokenResponse.of(newAccessToken, newRefreshToken);
     }

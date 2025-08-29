@@ -22,17 +22,17 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/api/login")
-    public ResponseEntity<GlobalResponse> login(@RequestBody LoginRequest request){
+    @PostMapping("/login")
+    public ResponseEntity<GlobalResponse> login(@RequestBody LoginRequest request, HttpServletResponse response){
 
         // Http 응답 객체 생성
-        LoginResponse response = authService.login(request);
+        LoginResponse loginResponse = authService.login(request, response);
 
-        return GlobalResponse.onSuccess(SuccessCode.OK, response);
+        return GlobalResponse.onSuccess(SuccessCode.OK, loginResponse);
 
     }
 
-    @PostMapping("/api/signup")
+    @PostMapping("/signup")
     public ResponseEntity<GlobalResponse> signup(@RequestBody SignupRequest request){
 
         authService.signup(request);
@@ -47,7 +47,6 @@ public class AuthController {
 
         return GlobalResponse.onSuccess(SuccessCode.OK, tokenResponse);
     }
-
 
     /*
         인가 테스트용 API

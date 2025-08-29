@@ -72,7 +72,7 @@ public class Member extends BaseEntity {
     public static Member of(SignupRequest request, String encryptedPassword){
 
         return Member.builder()
-                .memberName(request.getUserName())
+                .memberName(request.getMemberName())
                 .email(request.getEmail())
                 .address(request.getAddress())
                 .password(encryptedPassword)

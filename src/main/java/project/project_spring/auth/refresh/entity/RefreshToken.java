@@ -2,19 +2,19 @@ package project.project_spring.auth.refresh.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.project_spring.user.domain.common.BaseEntity;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class RefreshToken extends BaseEntity {
 
     @Column(nullable = false)
     private Long memberId;
 
     @Column(nullable = false, unique = true)
+    @Setter
     private String token;
 
     @Builder

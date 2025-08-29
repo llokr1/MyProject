@@ -1,9 +1,6 @@
 package project.project_spring.auth.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import project.project_spring.common.exception.GeneralException;
-import project.project_spring.common.response.ErrorCode;
 import project.project_spring.user.domain.Member;
-import project.project_spring.user.domain.enums.Role;
 
 import java.security.Key;
 import java.util.Collections;
@@ -34,9 +28,9 @@ public class JwtTokenProvider {
     @Value("${jwt.access.secretKey}")
     private String secretKey;
     @Value("${jwt.access.expiration}")
-    public static Long jwtExpiration;
+    public Long jwtExpiration;
     @Value("${jwt.refresh.expiration}")
-    public static Long refreshExpiration;
+    public Long refreshExpiration;
 
     private Key getSigningKey(){
         return Keys.hmacShaKeyFor(secretKey.getBytes());
@@ -71,7 +65,6 @@ public class JwtTokenProvider {
 
         String role = member.getRole().toString();
 
-        log.info("{} : 토큰 재발급 완료", email);
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
@@ -92,8 +85,11 @@ public class JwtTokenProvider {
         Claims claims = parseClaimsFromToken(token);
 
         Date expirationDate = claims.getExpiration();
-        if (expirationDate.before(new Date())) {
-            throw new GeneralException(ErrorCode.TOKEN_EXPIRED);
+        try{
+            expirationDate.before(new Date());
+        }catch (ExpiredJwtException e){
+            // Authentication Filter에서 예외 발생 시 컨트롤러 진입 전이기 때문에 전역 예외 처리기가 작동 X
+            log.warn("{} : 토큰 기한 만료", claims.getSubject());
         }
     }
 
@@ -146,13 +142,14 @@ public class JwtTokenProvider {
         Claims claims = parseClaimsFromToken(token);
 
         Date expirationDate = claims.getExpiration();
+
         if (expirationDate.before(new Date())) {
             return false;
         }
         return true;
     }
 
-    public Long extractUserIdFromRefreshToken(String token){
+    public Long extractMemberIdFromRefreshToken(String token){
 
         Claims claims = parseClaimsFromToken(token);
 

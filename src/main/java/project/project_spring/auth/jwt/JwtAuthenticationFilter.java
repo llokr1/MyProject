@@ -27,17 +27,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = jwtTokenProvider.getTokenFromRequest(request);
 
-        if(StringUtils.hasText(token)){
-            jwtTokenProvider.validateJwtToken(token);
 
-            Authentication authentication = jwtTokenProvider.getAuthenticationFromToken(token);
+        if(StringUtils.hasText(token)) {
 
-            if (authentication != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("사용자 정보 저장 완료 : {}", authentication.getName());
-            } else {
-                log.debug("JWT 토큰이 없거나 유효하지 않습니다.");
+            /*
+             토큰 재발급 경로는 인증이 필요 없음
+              :이미 인증이 안돼서 토큰을 재발급 받는 것이기 때문
+            */
+            if (!request.getRequestURI().equals("/api/reissue")) {
+
+                jwtTokenProvider.validateJwtToken(token);
+
+                Authentication authentication = jwtTokenProvider.getAuthenticationFromToken(token);
+
+                if (authentication != null &&
+                        SecurityContextHolder.getContext().getAuthentication() == null) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.info("사용자 정보 저장 완료 : {}", authentication.getName());
+                } else {
+                    log.debug("JWT 토큰이 없거나 유효하지 않습니다.");
+                }
             }
         }
         filterChain.doFilter(request, response);
