@@ -89,7 +89,7 @@ public class JwtTokenProvider {
         String email = claims.getSubject();
         String role =claims.get("role", String.class);
 
-        User principal = new User(email, null, Collections.singleton(() -> role));
+        User principal = new User(email, "", Collections.singleton(() -> role));
         return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 
