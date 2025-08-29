@@ -18,10 +18,10 @@ import project.project_spring.user.web.dto.SignupRequest;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class Member extends BaseEntity {
 
     @Column(nullable = false)
-    private String userName;
+    private String memberName;
 
     @Column(nullable = false)
     private String email;
@@ -53,9 +53,9 @@ public class User extends BaseEntity {
     private AccountStatus accountStatus;
 
     @Builder
-    private User(String userName, String email, String password, String gender, Integer age, String address, String specAddress){
+    private Member(String memberName, String email, String password, String gender, Integer age, String address, String specAddress){
 
-        this.userName = userName;
+        this.memberName = memberName;
         this.email = email;
         this.password = password;
 
@@ -69,10 +69,10 @@ public class User extends BaseEntity {
         this.accountStatus = AccountStatus.ACTIVATED;
     }
 
-    public static User of(SignupRequest request, String encryptedPassword){
+    public static Member of(SignupRequest request, String encryptedPassword){
 
-        return User.builder()
-                .userName(request.getUserName())
+        return Member.builder()
+                .memberName(request.getMemberName())
                 .email(request.getEmail())
                 .address(request.getAddress())
                 .password(encryptedPassword)
