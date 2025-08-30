@@ -15,7 +15,6 @@ public class LoginResponse {
 
     public String accessToken;
 
-
     @Builder
     private LoginResponse(Long userId, String userName, String accessToken){
         this.userId = userId;

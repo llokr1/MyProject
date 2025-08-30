@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<h2>Welcome to Home Page!</h2>
+
+<p th:text="'반가워, ' + ${#authentication.name} + '!'"></p>
+
+
+<!-- 로그아웃 버튼 추가 -->
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+</body>
