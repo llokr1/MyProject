@@ -1,4 +1,4 @@
-package project.project_spring.user.domain.enums;
+package project.project_spring.member.domain.enums;
 
 public enum AccountStatus {
 

@@ -7,7 +7,7 @@ import project.project_spring.auth.refresh.entity.RefreshToken;
 import project.project_spring.auth.refresh.repository.RefreshTokenRepository;
 import project.project_spring.common.exception.GeneralException;
 import project.project_spring.common.response.ErrorCode;
-import project.project_spring.user.domain.Member;
+import project.project_spring.member.domain.Member;
 
 @Service
 @RequiredArgsConstructor

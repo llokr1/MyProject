@@ -1,4 +1,4 @@
-package project.project_spring.user.domain;
+package project.project_spring.member.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,10 +9,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import project.project_spring.user.domain.common.BaseEntity;
-import project.project_spring.user.domain.enums.AccountStatus;
-import project.project_spring.user.domain.enums.Gender;
-import project.project_spring.user.domain.enums.Role;
+import project.project_spring.member.domain.common.BaseEntity;
+import project.project_spring.member.domain.enums.AccountStatus;
+import project.project_spring.member.domain.enums.Gender;
+import project.project_spring.member.domain.enums.Role;
 import project.project_spring.auth.web.dto.SignupRequest;
 
 @Entity

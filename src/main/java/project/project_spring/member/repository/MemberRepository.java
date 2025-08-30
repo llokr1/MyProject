@@ -1,7 +1,7 @@
-package project.project_spring.user.repository;
+package project.project_spring.member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.project_spring.user.domain.Member;
+import project.project_spring.member.domain.Member;
 
 import java.util.Optional;
 
