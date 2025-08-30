@@ -12,9 +12,9 @@ import project.project_spring.auth.service.AuthService;
 import project.project_spring.auth.web.dto.TokenResponse;
 import project.project_spring.common.response.GlobalResponse;
 import project.project_spring.common.response.SuccessCode;
-import project.project_spring.user.web.dto.LoginRequest;
-import project.project_spring.user.web.dto.LoginResponse;
-import project.project_spring.user.web.dto.SignupRequest;
+import project.project_spring.auth.web.dto.LoginRequest;
+import project.project_spring.auth.web.dto.LoginResponse;
+import project.project_spring.auth.web.dto.SignupRequest;
 
 @RestController
 @RequiredArgsConstructor

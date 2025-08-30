@@ -19,13 +19,12 @@ import project.project_spring.auth.jwt.JwtTokenProvider;
 import project.project_spring.auth.web.dto.TokenResponse;
 import project.project_spring.common.exception.GeneralException;
 import project.project_spring.common.response.ErrorCode;
-
-import project.project_spring.user.domain.Member;
-import project.project_spring.user.service.MemberService;
-import project.project_spring.user.web.dto.LoginRequest;
-import project.project_spring.user.web.dto.LoginResponse;
-import project.project_spring.user.web.dto.SignupRequest;
-import project.project_spring.user.web.dto.SignupResponse;
+import project.project_spring.member.domain.Member;
+import project.project_spring.member.service.MemberService;
+import project.project_spring.auth.web.dto.LoginRequest;
+import project.project_spring.auth.web.dto.LoginResponse;
+import project.project_spring.auth.web.dto.SignupRequest;
+import project.project_spring.auth.web.dto.SignupResponse;
 
 import java.util.Arrays;
 import java.util.Collections;

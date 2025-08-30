@@ -1,11 +1,11 @@
-package project.project_spring.user.service;
+package project.project_spring.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.project_spring.common.exception.GeneralException;
 import project.project_spring.common.response.ErrorCode;
-import project.project_spring.user.domain.Member;
-import project.project_spring.user.repository.MemberRepository;
+import project.project_spring.member.domain.Member;
+import project.project_spring.member.repository.MemberRepository;
 
 @Service
 @RequiredArgsConstructor

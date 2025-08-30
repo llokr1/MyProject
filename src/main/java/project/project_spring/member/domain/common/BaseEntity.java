@@ -1,4 +1,4 @@
-package project.project_spring.user.domain.common;
+package project.project_spring.member.domain.common;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import project.project_spring.user.domain.User;
-import project.project_spring.user.repository.UserRepository;
-import project.project_spring.user.web.dto.LoginRequest;
-import project.project_spring.user.web.dto.LoginResponse;
-import project.project_spring.user.web.dto.SignupRequest;
+import project.project_spring.member.domain.Member;
+import project.project_spring.auth.web.dto.LoginRequest;
+import project.project_spring.auth.web.dto.LoginResponse;
+import project.project_spring.auth.web.dto.SignupRequest;
+import project.project_spring.member.service.MemberService;
 
 @Service
 @RequiredArgsConstructor
@@ -16,18 +16,18 @@ import project.project_spring.user.web.dto.SignupRequest;
 public class FormAuthServiceImpl implements AuthService{
 
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final MemberService memberService;
 
     @Override
     public void signup(SignupRequest request) {
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
 
-        User newUser = User.of(request, encryptedPassword);
+        Member newMember = Member.of(request, encryptedPassword);
 
-        userRepository.save(newUser);
+        memberService.saveMember(newMember);
 
-        log.info("회원가입 완료 - 사용자 이름 : {}", newUser.getUserName());
+        log.info("회원가입 완료 - 사용자 이름 : {}", newMember.getMemberName());
     }
 
     @Override

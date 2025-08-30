@@ -1,4 +1,4 @@
-package project.project_spring.user.web.dto;
+package project.project_spring.auth.web.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

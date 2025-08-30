@@ -3,7 +3,7 @@ package project.project_spring.auth.refresh.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.*;
-import project.project_spring.user.domain.common.BaseEntity;
+import project.project_spring.member.domain.common.BaseEntity;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

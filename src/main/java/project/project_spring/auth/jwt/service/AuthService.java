@@ -1,8 +1,8 @@
 package project.project_spring.auth.jwt.service;
 
-import project.project_spring.user.web.dto.LoginRequest;
-import project.project_spring.user.web.dto.LoginResponse;
-import project.project_spring.user.web.dto.SignupRequest;
+import project.project_spring.auth.web.dto.LoginRequest;
+import project.project_spring.auth.web.dto.LoginResponse;
+import project.project_spring.auth.web.dto.SignupRequest;
 
 public interface AuthService {
 
