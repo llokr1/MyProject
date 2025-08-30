@@ -13,7 +13,7 @@ import project.project_spring.user.domain.common.BaseEntity;
 import project.project_spring.user.domain.enums.AccountStatus;
 import project.project_spring.user.domain.enums.Gender;
 import project.project_spring.user.domain.enums.Role;
-import project.project_spring.user.web.dto.SignupRequest;
+import project.project_spring.auth.web.dto.SignupRequest;
 
 @Entity
 @Getter
