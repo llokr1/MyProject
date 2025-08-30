@@ -17,10 +17,9 @@ import project.project_spring.auth.jwt.JwtTokenProvider;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-class SecurityConfig {
+public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,12 +27,19 @@ class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/signup", "/login").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/signup",
+                                "/login",
+                                "/api/reissue").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

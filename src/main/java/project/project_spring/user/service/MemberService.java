@@ -2,6 +2,8 @@ package project.project_spring.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.project_spring.common.exception.GeneralException;
+import project.project_spring.common.response.ErrorCode;
 import project.project_spring.user.domain.Member;
 import project.project_spring.user.repository.MemberRepository;
 
@@ -14,7 +16,7 @@ public class MemberService {
     public Member findMemberById(Long memberId){
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
 
         return member;
     }
@@ -22,7 +24,7 @@ public class MemberService {
     public Member findMemberByEmail(String email){
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new GeneralException(ErrorCode.MEMBER_NOT_FOUND));
 
         return member;
     }

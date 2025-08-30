@@ -1,12 +1,10 @@
 package project.project_spring.auth.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import project.project_spring.user.domain.Member;
 
 import java.security.Key;
 import java.util.Collections;
@@ -29,20 +28,23 @@ public class JwtTokenProvider {
     @Value("${jwt.access.secretKey}")
     private String secretKey;
     @Value("${jwt.access.expiration}")
-    private Long expiration;
+    public Long jwtExpiration;
+    @Value("${jwt.refresh.expiration}")
+    public Long refreshExpiration;
 
     private Key getSigningKey(){
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     // 사용자 정보를 바탕으로 토큰 생성
-    public String generateToken(Authentication authentication){
+    public String generateAccessToken(Authentication authentication){
         // Authentication 객체로부터 사용자 정보를 가져온다.
         String email = authentication.getName();
         // Authorities의 두 번째 값이 role 값이다.
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
-        log.info("토큰 생성 완료");
+        log.info("{} : 토큰 생성 완료", email);
+
         return Jwts.builder()
                 // 토큰 제목 설정
                 .setSubject(email)
@@ -51,39 +53,52 @@ public class JwtTokenProvider {
                 // 발급 날짜 설정
                 .setIssuedAt(new Date())
                 // 만료 기한 설정
-                .setExpiration(new Date(System.currentTimeMillis()+expiration))
+                .setExpiration(new Date(System.currentTimeMillis()+ jwtExpiration))
                 // SecretKey로 서명
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 // Jwt 토큰으로 직렬화
                 .compact();
     }
 
-    // 토큰의 유효성 검사
-    public void validateToken(String token){
+    public String regenerateAccessToken(Member member){
 
-        try{
-            if (token == null){
-                throw new JwtException("토큰이 존재하지 않습니다.");
-            }
+        String email = member.getEmail();
 
-            Claims claims = parseClaimsFromToken(token);
+        String role = member.getRole().toString();
 
-            Date expirationDate = claims.getExpiration();
-            if (expirationDate.before(new Date())) {
-                throw new JwtException("토큰 기한 만료");
-            }
-        } catch(Exception e){
-            log.warn("토큰이 유효하지 않습니다 : {}", token);
-        }
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+
     }
 
+    // 토큰의 유효성 검사
+    public void validateJwtToken(String token){
+
+        if (token == null){
+            throw new JwtException("토큰이 존재하지 않습니다.");
+        }
+
+        Claims claims = parseClaimsFromToken(token);
+
+        Date expirationDate = claims.getExpiration();
+        try{
+            expirationDate.before(new Date());
+        }catch (ExpiredJwtException e){
+            // Authentication Filter에서 예외 발생 시 컨트롤러 진입 전이기 때문에 전역 예외 처리기가 작동 X
+            log.warn("{} : 토큰 기한 만료", claims.getSubject());
+        }
+    }
 
     // Jwt 토큰으로부터 Spring Security의 Authentication 객체를 추출
     public Authentication getAuthenticationFromToken(String token){
 
-        // 유효성 검사
-        validateToken(token);
-
+        validateJwtToken(token);
+      
         Claims claims = parseClaimsFromToken(token);
 
         String email = claims.getSubject();
@@ -113,4 +128,34 @@ public class JwtTokenProvider {
                         .getBody();
     }
 
+    public String generateRefreshToken(Long memberId){
+
+        return Jwts.builder()
+                .setIssuedAt(new Date())
+                .setSubject(memberId.toString())
+                .setExpiration(new Date(System.currentTimeMillis()+ refreshExpiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public boolean validateRefreshToken(String token) {
+
+        Claims claims = parseClaimsFromToken(token);
+
+        Date expirationDate = claims.getExpiration();
+
+        if (expirationDate.before(new Date())) {
+            return false;
+        }
+        return true;
+    }
+
+    public Long extractMemberIdFromRefreshToken(String token){
+
+        Claims claims = parseClaimsFromToken(token);
+
+        String userId = claims.getSubject();
+
+        return Long.parseLong(userId);
+    }
 }
