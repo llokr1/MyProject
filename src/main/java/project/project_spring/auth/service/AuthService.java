@@ -15,4 +15,5 @@ public interface AuthService {
     public LoginResponse login(LoginRequest request, HttpServletResponse response);
 
     public TokenResponse reissueToken(HttpServletRequest request, HttpServletResponse response);
+
 }

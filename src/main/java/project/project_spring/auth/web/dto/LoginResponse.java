@@ -26,6 +26,7 @@ public class LoginResponse {
     }
 
     public static LoginResponse of(Long userId, String userName, String accessToken, String refreshToken){
+
         return LoginResponse.builder()
                 .userId(userId)
                 .userName(userName)

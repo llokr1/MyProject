@@ -44,6 +44,7 @@ public class JwtTokenProvider {
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
         log.info("{} : 토큰 생성 완료", email);
+
         return Jwts.builder()
                 // 토큰 제목 설정
                 .setSubject(email)
@@ -97,7 +98,7 @@ public class JwtTokenProvider {
     public Authentication getAuthenticationFromToken(String token){
 
         validateJwtToken(token);
-
+      
         Claims claims = parseClaimsFromToken(token);
 
         String email = claims.getSubject();
@@ -157,5 +158,4 @@ public class JwtTokenProvider {
 
         return Long.parseLong(userId);
     }
-
 }
