@@ -15,22 +15,18 @@ public class LoginResponse {
 
     public String accessToken;
 
-    public String refreshToken;
-
     @Builder
-    private LoginResponse(Long userId, String userName, String accessToken, String refreshToken){
+    private LoginResponse(Long userId, String userName, String accessToken){
         this.userId = userId;
         this.userName = userName;
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
     }
 
-    public static LoginResponse of(Long userId, String userName, String accessToken, String refreshToken){
+    public static LoginResponse of(Long userId, String userName, String accessToken){
         return LoginResponse.builder()
                 .userId(userId)
                 .userName(userName)
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .build();
     }
 

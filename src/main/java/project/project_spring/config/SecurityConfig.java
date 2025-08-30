@@ -16,32 +16,24 @@ import project.project_spring.auth.jwt.JwtTokenProvider;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+@RequiredArgsConstructor
+class SecurityConfig {
+
+    private final JwtTokenProvider jwtTokenProvider;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        // 회원가입 경로 접근 허용
-                        .requestMatchers("/signup").permitAll()
-                        // 관리자 페이지는 관리자만 접근 가능하도록 허용
+                        .requestMatchers("/signup", "/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // 다른 모든 경로에 인증을 요구
                         .anyRequest().authenticated()
                 )
-                .formLogin((form) -> form
-                        // 로그인 Form을 "/login" 페이지로 설정
-                        .loginPage("/login")
-                        // 로그인 성공 시 리디렉션 화면 설정
-                        .defaultSuccessUrl("/main", true)
-                        .permitAll())
-                .logout(logout -> logout
-                        // 로그아웃 URL 설정
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                );
-
+                .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -2,14 +2,16 @@ package project.project_spring.user.web.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class SignupRequest {
 
-    public String userName;
+    public String memberName;
 
     @NotNull
     @Email
