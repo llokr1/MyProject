@@ -11,25 +11,25 @@ public class LoginResponse {
 
     public Long userId;
 
-    public String userName;
+    public String memberName;
 
     public String accessToken;
 
     public String refreshToken;
 
     @Builder
-    private LoginResponse(Long userId, String userName, String accessToken, String refreshToken){
+    private LoginResponse(Long userId, String memberName, String accessToken, String refreshToken){
         this.userId = userId;
-        this.userName = userName;
+        this.memberName = memberName;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 
-    public static LoginResponse of(Long userId, String userName, String accessToken, String refreshToken){
+    public static LoginResponse of(Long userId, String memberName, String accessToken, String refreshToken){
 
         return LoginResponse.builder()
                 .userId(userId)
-                .userName(userName)
+                .memberName(memberName)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
