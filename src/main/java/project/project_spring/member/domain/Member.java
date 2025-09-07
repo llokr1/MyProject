@@ -82,4 +82,14 @@ public class Member extends BaseEntity {
                 .build();
     }
 
+    // Test 용도
+    public static Member of(String email, String encryptedPassword, String memberName, Role role){
+
+        return Member.builder()
+                .email(email)
+                .password(encryptedPassword)
+                .memberName(memberName)
+                .build();
+    }
+
 }
