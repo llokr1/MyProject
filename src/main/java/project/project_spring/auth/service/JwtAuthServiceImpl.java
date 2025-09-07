@@ -64,7 +64,7 @@ public class JwtAuthServiceImpl implements AuthService{
 
         // DB에 저장된 비밀번호 값과 비교 (비밀번호 검증)
         if(!passwordEncoder.matches(request.getPassword(), member.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new GeneralException(ErrorCode.INVALIDATE_PASSWORD);
         }
 
         // 두 정보가 모두 일치하면 Authentication 객체 생성

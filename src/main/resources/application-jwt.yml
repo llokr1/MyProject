@@ -1,0 +1,11 @@
+spring:
+  config:
+    activate:
+      on-profile: jwt
+
+jwt:
+  access:
+    secretKey: myprojectauthenticationjwttokenfighting
+    expiration: 600000 # 10분
+  refresh:
+    expiration: 1209600000 # 14일
